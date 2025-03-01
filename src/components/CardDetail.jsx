@@ -6,7 +6,7 @@ const CardDetail = () => {
     images: [
       "https://t4.ftcdn.net/jpg/06/34/25/63/360_F_634256300_1J563CXPkUJR2nteelgbfQxQz4MvFT5h.jpg",
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRviRD5-NJ781r1WEytfypBvsra_GUYdli2oA&s",
-      `https://t4.ftcdn.net/jpg/06/34/25/63/360_F_634256300_1J563CXPkUJR2nteelgbfQxQz4MvFT5h.jpg`,
+      `https://www.shutterstock.com/image-vector/abstract-boy-avtar-character-fiction-260nw-2168819881.jpg`,
     ],
     price: 25000,
     description: "High-performance gaming laptop with RTX 3060, 16GB RAM, and 512GB SSD.",

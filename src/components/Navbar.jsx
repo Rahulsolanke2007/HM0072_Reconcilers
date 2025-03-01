@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Search, Plus, ChevronDown, Heart, User, Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -37,11 +38,11 @@ const Navbar = () => {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <div className="flex items-center">
-              <a href="/" className="text-[#002f34] text-3xl font-bold">
+              <Link to="/" className="text-[#002f34] text-3xl font-bold">
                 <span className="text-[#3a77ff]">O</span>
                 <span className="text-[#23e5db]">L</span>
                 <span className="text-[#ffce32]">X</span>
-              </a>
+              </Link>
             </div>
             
             {/* Mobile menu button */}
@@ -133,9 +134,9 @@ const Navbar = () => {
               </button>
               
               {/* Login */}
-              <a href="/login" className="text-[#002f34] font-semibold">
+              <Link to="/login" className="text-[#002f34] font-semibold">
                 Login
-              </a>
+              </Link>
               
               {/* Sell button */}
               <a 
