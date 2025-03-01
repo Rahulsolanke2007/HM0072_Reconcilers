@@ -5,11 +5,11 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [location, setLocation] = useState('India');
   const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
-  const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
   const [isCategoriesDropdownOpen, setIsCategoriesDropdownOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   
   const locations = ['PCCOE','DYP','COEP'];
-  const languages = ['ENGLISH', 'हिन्दी'];
   const categories = [
     'TextBooks',
     'Notes',
@@ -21,6 +21,122 @@ const Navbar = () => {
     setLocation(loc);
     setIsLocationDropdownOpen(false);
   };
+
+  const LoginModal = () => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-lg shadow-xl w-96">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-[#002f34]">Login</h2>
+          <button onClick={() => setIsLoginModalOpen(false)}>
+            <X size={24} className="text-gray-500 hover:text-gray-700" />
+          </button>
+        </div>
+        <form className="space-y-4">
+          <div>
+            <input
+              type="email"
+              placeholder="Email"
+              className="w-full border-2 rounded p-2 outline-none focus:border-[#23e5db]"
+            />
+          </div>
+          <div>
+            <input
+              type="password"
+              placeholder="Password"
+              className="w-full border-2 rounded p-2 outline-none focus:border-[#23e5db]"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-[#002f34] text-white py-2 rounded hover:bg-[#003f44]"
+          >
+            Login
+          </button>
+        </form>
+        <div className="mt-4 text-center text-gray-600">
+          Don't have an account?{" "}
+          <button
+            className="text-[#3a77ff] hover:underline font-semibold"
+            onClick={() => {
+              setIsLoginModalOpen(false);
+              setIsSignupModalOpen(true);
+            }}
+          >
+            Sign Up
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const SignupModal = () => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-lg shadow-xl w-96">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-[#002f34]">Sign Up</h2>
+          <button onClick={() => setIsSignupModalOpen(false)}>
+            <X size={24} className="text-gray-500 hover:text-gray-700" />
+          </button>
+        </div>
+        <form className="space-y-4">
+          <div>
+            <input
+              type="text"
+              placeholder="Full Name"
+              className="w-full border-2 rounded p-2 outline-none focus:border-[#23e5db]"
+            />
+          </div>
+          <div>
+            <input
+              type="email"
+              placeholder="Email"
+              className="w-full border-2 rounded p-2 outline-none focus:border-[#23e5db]"
+            />
+          </div>
+          <div>
+            <input
+              type="password"
+              placeholder="Password"
+              className="w-full border-2 rounded p-2 outline-none focus:border-[#23e5db]"
+            />
+          </div>
+          <div>
+            <input
+              type="tel"
+              placeholder="Phone Number"
+              className="w-full border-2 rounded p-2 outline-none focus:border-[#23e5db]"
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Address"
+              className="w-full border-2 rounded p-2 outline-none focus:border-[#23e5db]"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-[#002f34] text-white py-2 rounded hover:bg-[#003f44]"
+          >
+            Sign Up
+          </button>
+        </form>
+        <div className="mt-4 text-center text-gray-600">
+          Already have an account?{" "}
+          <button
+            className="text-[#3a77ff] hover:underline font-semibold"
+            onClick={() => {
+              setIsSignupModalOpen(false);
+              setIsLoginModalOpen(true);
+            }}
+          >
+            Login
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+  
 
   return (
     <div className="sticky top-0 z-50 bg-white shadow-sm">
@@ -96,39 +212,13 @@ const Navbar = () => {
             <div className="hidden md:flex items-center space-x-5">
               {/* Language selector */}
               <div className="relative">
-                <button 
-                  className="text-[#002f34] font-semibold text-sm flex items-center"
-                  onClick={() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
-                >
-                  ENGLISH
-                  <ChevronDown size={18} className="ml-1" />
-                </button>
-                
-                {/* Language dropdown */}
-                {isLanguageDropdownOpen && (
-                  <div className="absolute top-full right-0 mt-1 w-36 bg-white border rounded-md shadow-lg z-10">
-                    {languages.map((lang) => (
-                      <div 
-                        key={lang} 
-                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-semibold text-sm"
-                        onClick={() => setIsLanguageDropdownOpen(false)}
-                      >
-                        {lang}
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
-              
-              {/* Favorites */}
-              <button className="text-[#002f34]">
-                <Heart size={22} />
-              </button>
-              
-              {/* Login */}
-              <a href="/login" className="text-[#002f34] font-semibold">
+              <button 
+                onClick={() => setIsLoginModalOpen(true)} 
+                className="text-[#002f34] font-semibold"
+              >
                 Login
-              </a>
+              </button>
               
               {/* Sell button */}
               <a 
@@ -157,15 +247,13 @@ const Navbar = () => {
           {/* Mobile Menu */}
           {isMenuOpen && (
             <div className="md:hidden mt-3 py-2 space-y-3">
-              <a href="/login" className="block py-2 text-[#002f34] font-medium">
+              <button 
+                onClick={() => setIsLoginModalOpen(true)} 
+                className="block py-2 text-[#002f34] font-medium"
+              >
                 Login
-              </a>
-              <button className="block py-2 text-[#002f34] font-medium flex items-center">
-                ENGLISH <ChevronDown size={18} className="ml-1" />
               </button>
-              <button className="block py-2 text-[#002f34] font-medium flex items-center">
-                <Heart size={20} className="mr-1" /> Favorites
-              </button>
+
               <a 
                 href="/post-ad" 
                 className="inline-flex items-center bg-[#fff7e6] hover:bg-[#ffce32] text-[#002f34] font-medium px-4 py-2 rounded-full border-2 border-[#ffce32]"
@@ -215,6 +303,10 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      {/* Add both modals */}
+      {isLoginModalOpen && <LoginModal />}
+      {isSignupModalOpen && <SignupModal />}
     </div>
   );
 };
