@@ -5,6 +5,7 @@ import ProductList from "./components/ProductList";
 import Footer from "./components/Footer";
 import CardDetail from "./components/CardDetail";
 import Login from './components/Login';
+import PostAdForm from "./components/PostAddForm";
 function App() {
   return (
     <div>
