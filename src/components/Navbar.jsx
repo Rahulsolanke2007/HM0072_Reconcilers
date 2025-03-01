@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Search, Plus, ChevronDown, Heart, User, Menu, X } from 'lucide-react';
+import LoginModal from './auth/LoginModal';
+import SignupModal from './auth/SignupModal';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -8,6 +10,8 @@ const Navbar = () => {
   const [isCategoriesDropdownOpen, setIsCategoriesDropdownOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   
   const locations = ['PCCOE','DYP','COEP'];
   const categories = [
@@ -22,121 +26,81 @@ const Navbar = () => {
     setIsLocationDropdownOpen(false);
   };
 
-  const LoginModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-xl w-96">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-[#002f34]">Login</h2>
-          <button onClick={() => setIsLoginModalOpen(false)}>
-            <X size={24} className="text-gray-500 hover:text-gray-700" />
-          </button>
-        </div>
-        <form className="space-y-4">
-          <div>
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full border-2 rounded p-2 outline-none focus:border-[#23e5db]"
-            />
-          </div>
-          <div>
-            <input
-              type="password"
-              placeholder="Password"
-              className="w-full border-2 rounded p-2 outline-none focus:border-[#23e5db]"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-[#002f34] text-white py-2 rounded hover:bg-[#003f44]"
-          >
-            Login
-          </button>
-        </form>
-        <div className="mt-4 text-center text-gray-600">
-          Don't have an account?{" "}
-          <button
-            className="text-[#3a77ff] hover:underline font-semibold"
-            onClick={() => {
-              setIsLoginModalOpen(false);
-              setIsSignupModalOpen(true);
-            }}
-          >
-            Sign Up
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+  // Add login handler
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
-  const SignupModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-xl w-96">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-[#002f34]">Sign Up</h2>
-          <button onClick={() => setIsSignupModalOpen(false)}>
-            <X size={24} className="text-gray-500 hover:text-gray-700" />
-          </button>
-        </div>
-        <form className="space-y-4">
-          <div>
-            <input
-              type="text"
-              placeholder="Full Name"
-              className="w-full border-2 rounded p-2 outline-none focus:border-[#23e5db]"
-            />
-          </div>
-          <div>
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full border-2 rounded p-2 outline-none focus:border-[#23e5db]"
-            />
-          </div>
-          <div>
-            <input
-              type="password"
-              placeholder="Password"
-              className="w-full border-2 rounded p-2 outline-none focus:border-[#23e5db]"
-            />
-          </div>
-          <div>
-            <input
-              type="tel"
-              placeholder="Phone Number"
-              className="w-full border-2 rounded p-2 outline-none focus:border-[#23e5db]"
-            />
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Address"
-              className="w-full border-2 rounded p-2 outline-none focus:border-[#23e5db]"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-[#002f34] text-white py-2 rounded hover:bg-[#003f44]"
-          >
-            Sign Up
-          </button>
-        </form>
-        <div className="mt-4 text-center text-gray-600">
-          Already have an account?{" "}
-          <button
-            className="text-[#3a77ff] hover:underline font-semibold"
-            onClick={() => {
-              setIsSignupModalOpen(false);
-              setIsLoginModalOpen(true);
-            }}
-          >
-            Login
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-  
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+
+    try {
+      const response = await fetch('https://campusbazzarbackend.onrender.com/api/user/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        // Store token in localStorage
+        localStorage.setItem('token', data.token);
+        setIsLoginModalOpen(false);
+        // You might want to add user state management here
+        console.log("login done");
+      } else {
+        setError(data.message || 'Login failed');
+      }
+    } catch (err) {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Add signup handler
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    const formData = {
+      name: e.target.fullName.value,
+      email: e.target.email.value,
+      password: e.target.password.value,
+      mobileNo: e.target.phone.value,
+      address: e.target.address.value,
+      college: e.target.college.value,
+      prn: e.target.prn.value,
+    };
+
+    try {
+      const response = await fetch('https://campusbazzarbackend.onrender.com/api/user/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        setIsSignupModalOpen(false);
+        setIsLoginModalOpen(true); // Redirect to login after successful signup
+      } else {
+        setError(data.message || 'Signup failed');
+      }
+    } catch (err) {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="sticky top-0 z-50 bg-white shadow-sm">
@@ -304,9 +268,30 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Add both modals */}
-      {isLoginModalOpen && <LoginModal />}
-      {isSignupModalOpen && <SignupModal />}
+      {/* Replace modal components with imported ones */}
+      <LoginModal 
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        onSignupClick={() => {
+          setIsLoginModalOpen(false);
+          setIsSignupModalOpen(true);
+        }}
+        error={error}
+        loading={loading}
+        handleLogin={handleLogin}
+      />
+      
+      <SignupModal 
+        isOpen={isSignupModalOpen}
+        onClose={() => setIsSignupModalOpen(false)}
+        onLoginClick={() => {
+          setIsSignupModalOpen(false);
+          setIsLoginModalOpen(true);
+        }}
+        error={error}
+        loading={loading}
+        handleSignup={handleSignup}
+      />
     </div>
   );
 };
