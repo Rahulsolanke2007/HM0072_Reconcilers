@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import Login from "./components/Login"
 import Hero from "./components/Hero";
 import ProductList from "./components/ProductList";
 import Footer from "./components/Footer";
@@ -10,8 +11,8 @@ function App() {
     <div>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Hero />} />
-        <Route path="/products" element={<ProductList />} />
+        <Route path="/" element={<ProductList />} />
+        <Route path='/login' element={<Login></Login>}/>
         <Route path="/detail" element={<CardDetail/>} />
       </Routes>
       <Footer />

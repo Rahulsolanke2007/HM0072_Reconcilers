@@ -8,20 +8,13 @@ const Navbar = () => {
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
   const [isCategoriesDropdownOpen, setIsCategoriesDropdownOpen] = useState(false);
   
-  const locations = ['India', 'Delhi', 'Mumbai', 'Bangalore', 'Hyderabad', 'Chennai'];
-  const languages = ['ENGLISH', 'हिन्दी', 'తెలుగు', 'தமிழ்', 'മലയാളം', 'ಕನ್ನಡ'];
+  const locations = ['PCCOE','DYP','COEP'];
+  const languages = ['ENGLISH', 'हिन्दी'];
   const categories = [
-    'All Categories',
-    'Cars',
-    'Motorcycles',
-    'Mobile Phones',
-    'For Sale: Houses & Apartments',
-    'Scooters',
-    'Commercial & Other Vehicles',
-    'For Rent: Houses & Apartments',
-    'Electronics & Appliances',
-    'Jobs',
-    'Furniture'
+    'TextBooks',
+    'Notes',
+    'Calculator',
+    'Stationary'
   ];
 
   const handleLocationSelect = (loc) => {
@@ -38,9 +31,9 @@ const Navbar = () => {
             {/* Logo */}
             <div className="flex items-center">
               <a href="/" className="text-[#002f34] text-3xl font-bold">
-                <span className="text-[#3a77ff]">O</span>
-                <span className="text-[#23e5db]">L</span>
-                <span className="text-[#ffce32]">X</span>
+                <span className="text-[#3a77ff]">UniTrade</span>
+                {/* <span className="text-[#23e5db]">Hub</span> */}
+                <span className="text-[#ffce32]">Zone</span>
               </a>
             </div>
             
