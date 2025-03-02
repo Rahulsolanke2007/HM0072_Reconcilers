@@ -5,16 +5,16 @@ import OtpInput from 'react-otp-input';
 
 const SignupModal = ({ isOpen, onClose, onLoginClick, error, loading, handleSignup }) => {
   // Updated steps: EMAIL -> OTP -> USER_DETAILS -> COMPLETE
+  
   const [currentStep, setCurrentStep] = useState('EMAIL');
   
-  // Basic initial info
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [otp, setOtp] = useState("");
   const [generatedOtp, setGeneratedOtp] = useState(null);
   const [isVerifying, setIsVerifying] = useState(false);
   
-  // Additional user details
+
   const [password, setPassword] = useState("");
   const [mobileNo, setMobileNo] = useState("");
   const [address, setAddress] = useState("");
