@@ -15,7 +15,6 @@ function App() {
         <Route path='/login' element={<Login></Login>}/>
         <Route path="/detail" element={<CardDetail/>} />
         <Route path="/PostAdForm" element={<PostAdForm/>} />
-
       </Routes>
       <Footer />
     </div>

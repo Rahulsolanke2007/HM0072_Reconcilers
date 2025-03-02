@@ -1,24 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 const CardDetail = () => {
-  // Dummy product data
-  const product = {
-    images: [
-      "https://t4.ftcdn.net/jpg/06/34/25/63/360_F_634256300_1J563CXPkUJR2nteelgbfQxQz4MvFT5h.jpg",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRviRD5-NJ781r1WEytfypBvsra_GUYdli2oA&s",
-      "https://www.shutterstock.com/image-vector/abstract-boy-avtar-character-fiction-260nw-2168819881.jpg",
-    ],
-    price: 25000,
-    description: "High-performance gaming laptop with RTX 3060, 16GB RAM, and 512GB SSD.",
-    owner: {
-      name: "Rahul Sharma",
-      phone: "+91 9876543210",
-      location: "Mumbai, India",
-    },
-  };
 
-  const { images, price, description, owner } = product;
+  // useEffect(()=>{
+  //   console.log('images',images);
+  // },[]);
+  const {state} = useLocation(); 
+
+  const {  images, price, title, createdAt,category,description,likeCount,userId,_id } = state;
+
   const [currentImage, setCurrentImage] = useState(0);
 
   const nextImage = () => {
@@ -30,7 +22,7 @@ const CardDetail = () => {
   };
 
   const handleLocate = () => {
-    const query = encodeURIComponent(owner.location);
+    const query = encodeURIComponent(userId.address);
     window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, "_blank");
   };
 
@@ -69,10 +61,10 @@ const CardDetail = () => {
         <div className="mt-6 p-4 border-t flex justify-between items-center">
           <div>
             <h3 className="text-xl font-semibold text-gray-800">Seller Information</h3>
-            <p className="text-gray-700">{owner.name}</p>
-            <p className="text-gray-500">📞 {owner.phone}</p>
+            <p className="text-gray-700">{userId.name}</p>
+            <p className="text-gray-500">📞 {userId.mobileNo}</p>
             <p className="text-gray-500 flex items-center">
-              <MapPin size={16} className="mr-1 text-red-500" /> {owner.location}
+              <MapPin size={16} className="mr-1 text-red-500" /> {userId.address}
             </p>
           </div>
           <button

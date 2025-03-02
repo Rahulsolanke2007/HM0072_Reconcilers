@@ -7,19 +7,12 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [location, setLocation] = useState('India');
   const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
-  const [isCategoriesDropdownOpen, setIsCategoriesDropdownOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
   const locations = ['PCCOE','DYP','COEP'];
-  const categories = [
-    'TextBooks',
-    'Notes',
-    'Calculator',
-    'Stationary'
-  ];
 
   const handleLocationSelect = (loc) => {
     setLocation(loc);
@@ -112,7 +105,6 @@ const Navbar = () => {
             <div className="flex items-center">
               <a href="/" className="text-[#002f34] text-3xl font-bold">
                 <span className="text-[#3a77ff]">UniTrade</span>
-                {/* <span className="text-[#23e5db]">Hub</span> */}
                 <span className="text-[#ffce32]">Zone</span>
               </a>
             </div>
@@ -229,41 +221,15 @@ const Navbar = () => {
         </div>
       </div>
       
-      {/* Categories bar */}
+      {/* Categories bar - MODIFIED to show only fixed categories without dropdown */}
       <div className="w-full border-b bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center overflow-x-auto py-2 space-x-6 text-sm no-scrollbar">
-            {/* Categories dropdown */}
-            <div className="relative">
-              <button 
-                className="whitespace-nowrap font-bold text-[#002f34] flex items-center"
-                onClick={() => setIsCategoriesDropdownOpen(!isCategoriesDropdownOpen)}
-              >
-                ALL CATEGORIES <ChevronDown size={18} className="ml-1" />
-              </button>
-              
-              {isCategoriesDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1 w-64 bg-white border rounded-md shadow-lg z-10 max-h-96 overflow-y-auto">
-                  {categories.map((category) => (
-                    <div 
-                      key={category} 
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => setIsCategoriesDropdownOpen(false)}
-                    >
-                      {category}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-            
-            <a href="/cars" className="whitespace-nowrap text-[#002f34] hover:text-[#3a77ff]">Cars</a>
-            <a href="/motorcycles" className="whitespace-nowrap text-[#002f34] hover:text-[#3a77ff]">Motorcycles</a>
-            <a href="/mobile-phones" className="whitespace-nowrap text-[#002f34] hover:text-[#3a77ff]">Mobile Phones</a>
-            <a href="/houses-apartments" className="whitespace-nowrap text-[#002f34] hover:text-[#3a77ff]">For Sale: Houses & Apartments</a>
-            <a href="/scooters" className="whitespace-nowrap text-[#002f34] hover:text-[#3a77ff]">Scooters</a>
-            <a href="/commercial-vehicles" className="whitespace-nowrap text-[#002f34] hover:text-[#3a77ff] hidden lg:block">Commercial & Other Vehicles</a>
-            <a href="/rent-houses-apartments" className="whitespace-nowrap text-[#002f34] hover:text-[#3a77ff] hidden lg:block">For Rent: Houses & Apartments</a>
+            <a href="/textbooks" className="whitespace-nowrap text-[#002f34] hover:text-[#3a77ff] font-medium">Textbooks</a>
+            <a href="/notes" className="whitespace-nowrap text-[#002f34] hover:text-[#3a77ff] font-medium">Notes</a>
+            <a href="/stationery" className="whitespace-nowrap text-[#002f34] hover:text-[#3a77ff] font-medium">Stationery</a>
+            <a href="/calculators" className="whitespace-nowrap text-[#002f34] hover:text-[#3a77ff] font-medium">Calculators</a>
+            <a href="/uniforms" className="whitespace-nowrap text-[#002f34] hover:text-[#3a77ff] font-medium">Uniforms</a>
           </div>
         </div>
       </div>

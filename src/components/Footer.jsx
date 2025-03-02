@@ -26,12 +26,12 @@ const Footer = () => {
         <div>
           <h3 className="font-bold mb-3">ABOUT US</h3>
           <ul className="space-y-2 text-sm text-gray-600">
-            <li>Tech@OLX</li>
+            <li>Tech@</li>
           </ul>
         </div>
 
         <div>
-          <h3 className="font-bold mb-3">OLX</h3>
+          <h3 className="font-bold mb-3">INFO</h3>
           <ul className="space-y-2 text-sm text-gray-600">
             <li>Blog</li>
             <li>Help</li>
@@ -45,8 +45,6 @@ const Footer = () => {
       {/* Bottom Section */}
       <div className="bg-[#002f34] text-white py-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center px-4 space-y-4 md:space-y-0">
-          
-
           <div className="flex space-x-4">
             <span>Help</span>
             <span>Sitemap</span>
@@ -65,7 +63,7 @@ const Footer = () => {
             />
           </div>
 
-          <p className="text-sm">&copy; 2006-2025 OLX</p>
+          <p className="text-sm">&copy; 2006-2025</p>
         </div>
       </div>
     </footer>
