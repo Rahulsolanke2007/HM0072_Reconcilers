@@ -1,13 +1,13 @@
-import axios from 'axios';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const PostAdForm = () => {
   const [formData, setFormData] = useState({
-    title: '',
-    price: '',
-    description: '',
-    category: '',
+    title: "",
+    price: 0,
+    description: "",
+    category: "",
     images: null,
   });
 
@@ -17,19 +17,46 @@ const PostAdForm = () => {
     const { name, value, files } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: files ? files : value,
+      [name]: name === 'price' ? Number(value) : files ? files : value,
     }));
   };
 
-  const handleSubmit = async(e) => {
-    e.preventDefault();
-    console.log('Ad Posted:', formData);
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      console.log("Ad Posted:", formData);
 
-    const response = await axios.post(`https://campusbazzarbackend.onrender.com/api/posts/add`,{
-    
-    });
+      const data = new FormData();
+      data.append('title', formData.title);
+      data.append('price', formData.price);
+      data.append('description', formData.description);
+      data.append('category', formData.category);
 
-    navigate('/'); // Navigate back to the homepage or wherever you want
+      Array.from(formData.images).forEach((image) => {
+        data.append('images', image);
+      });
+
+
+      console.log('Ad Data',data);
+
+      const token = localStorage.getItem('token');
+
+      const response = await fetch('https://campusbazzarbackend.onrender.com/api/posts/add', {
+        method: 'POST',
+        body: data,
+        headers: {
+          Authorization: `Bearer ${token}`, // No need for 'Content-Type', fetch sets it automatically for FormData
+        },
+      });
+
+      const result = await response.json();
+
+      console.log("response", result);
+
+      navigate("/"); // Navigate back to the homepage or wherever you want
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -95,11 +122,17 @@ const PostAdForm = () => {
             accept="image/*"
           />
         </div>
-        <button type="submit" className="bg-[#002f34] text-white px-5 py-2 rounded-lg w-full">
+        <button
+          type="submit"
+          className="bg-[#002f34] text-white px-5 py-2 rounded-lg w-full"
+        >
           Post Ad
         </button>
       </form>
-      <button onClick={() => navigate('/')} className="mt-5 text-sm text-gray-500 w-full text-center">
+      <button
+        onClick={() => navigate("/")}
+        className="mt-5 text-sm text-gray-500 w-full text-center"
+      >
         Cancel
       </button>
     </div>

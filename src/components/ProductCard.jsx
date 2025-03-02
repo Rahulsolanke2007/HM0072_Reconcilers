@@ -22,6 +22,7 @@ const ProductCard = ({
   const [liked, setLiked] = useState(isLiked);
   const [isLiking, setIsLiking] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -80,38 +81,132 @@ const ProductCard = ({
     }
   };
 
-  const handleLogin = async (email, password) => {
-    setLoading(true);
-    setError('');
+  // const handleLogin = async (email, password) => {
+  //   setLoading(true);
+  //   setError('');
     
-    try {
-      const response = await fetch('https://campusbazzarbackend.onrender.com/api/users/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+  //   try {
+  //     const response = await fetch('https://campusbazzarbackend.onrender.com/api/users/login', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ email, password }),
+  //     });
       
-      const data = await response.json();
+  //     const data = await response.json();
       
-      if (response.ok) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        setIsLoginModalOpen(false);
-        toast.success('Logged in successfully!');
+  //     if (response.ok) {
+  //       localStorage.setItem('token', data.token);
+  //       localStorage.setItem('user', JSON.stringify(data.user));
+  //       setIsLoginModalOpen(false);
+  //       toast.success('Logged in successfully!');
         
-        // Try to like the post immediately after successful login
-        handleLikeClick({ stopPropagation: () => {} });
-      } else {
-        setError(data.message || 'Login failed. Please try again.');
+  //       // Try to like the post immediately after successful login
+  //       handleLikeClick({ stopPropagation: () => {} });
+  //     } else {
+  //       setError(data.message || 'Login failed. Please try again.');
+  //     }
+  //   } catch (error) {
+  //     setError('Something went wrong. Please try again.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // const handleLogin = async (email, password) => {
+  //   setLoading(true);
+  //   setError('');
+    
+  //   try {
+  //     const response = await fetch('https://campusbazzarbackend.onrender.com/api/user/login', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ email, password }),
+  //     });
+  
+  //     const data = await response.json();
+  
+  //     if (response.ok) {
+  //       localStorage.setItem('token', data.token);
+  //       localStorage.setItem('user', JSON.stringify(data.user));
+  //       setIsLoginModalOpen(false);
+  //       toast.success('Logged in successfully!');
+  
+  //       // Attempt to like the post after login
+  //       handleLikeClick({ stopPropagation: () => {} });
+  //     } else {
+  //       setError(data.message || 'Login failed. Please try again.');
+  //     }
+  //   } catch (error) {
+  //     setError('Something went wrong. Please try again.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  const handleLogin = async (e) => {
+      e.preventDefault();
+      setError('');
+      setLoading(true);
+  
+      try {
+        const response = await fetch('https://campusbazzarbackend.onrender.com/api/user/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: e.target.email.value,
+            password: e.target.password.value
+          }),
+        });
+  
+        const data = await response.json();
+        console.log(data.status)
+  
+        if (data.status) {
+          localStorage.setItem('token', data.token);
+          console.log(localStorage.getItem('token'))
+          setIsLoggedIn(true);
+          setIsLoginModalOpen(false);
+          toast.success('Successfully logged in!', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        } else {
+          toast.error(data.message || 'Login failed', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+          setError(data.message || 'Login failed');
+        }
+      } catch (err) {
+        toast.error('Something went wrong. Please try again.', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        setError('Something went wrong. Please try again.');
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      setError('Something went wrong. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
   return (
     <>
