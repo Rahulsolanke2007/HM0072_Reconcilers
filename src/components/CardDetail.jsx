@@ -3,14 +3,8 @@ import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import { useLocation } from "react-router-dom";
 
 const CardDetail = () => {
-
-  // useEffect(()=>{
-  //   console.log('images',images);
-  // },[]);
-  const {state} = useLocation(); 
-
-  const {  images, price, title, createdAt,category,description,likeCount,userId,_id } = state;
-
+  const { state } = useLocation();
+  const { images, price, title, description, userId, _id } = state;
   const [currentImage, setCurrentImage] = useState(0);
 
   const nextImage = () => {
@@ -21,9 +15,15 @@ const CardDetail = () => {
     setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
   };
 
-  const handleLocate = () => {
-    const query = encodeURIComponent(userId.address);
-    window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, "_blank");
+  const handleAddToCart = () => {
+    let likedItems = JSON.parse(localStorage.getItem("likedItems")) || [];
+    if (!likedItems.some((item) => item._id === _id)) {
+      likedItems.push({ _id, title, price, images });
+      localStorage.setItem("likedItems", JSON.stringify(likedItems));
+      alert("Added to Cart!");
+    } else {
+      alert("Already in Cart!");
+    }
   };
 
   return (
@@ -68,10 +68,10 @@ const CardDetail = () => {
             </p>
           </div>
           <button
-            onClick={handleLocate}
-            className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition flex items-center shadow-md"
+            onClick={handleAddToCart}
+            className="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition shadow-md"
           >
-            <MapPin size={18} className="mr-2" /> Locate
+            Add to Cart
           </button>
         </div>
       </div>

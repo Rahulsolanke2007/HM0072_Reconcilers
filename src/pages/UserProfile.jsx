@@ -7,12 +7,16 @@ const UserProfile = () => {
     mobileNo: '',
     address: '',
     college: '',
-    prn: ''
+    prn: '',
+    profileImage: '',
+    createdAt: ''
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [imageLoading, setImageLoading] = useState(false);
+  const [likedItems, setLikedItems] = useState([]);
 
+  // Fetch User Information
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
@@ -30,8 +34,6 @@ const UserProfile = () => {
         });
 
         const data = await response.json();
-         console.log("data --> ",data);
-         
         if (response.ok) {
           setUserInfo(data.user);
         } else {
@@ -47,6 +49,13 @@ const UserProfile = () => {
     fetchUserInfo();
   }, []);
 
+  // Fetch Liked Items from localStorage
+  useEffect(() => {
+    const storedLikedItems = JSON.parse(localStorage.getItem("likedItems")) || [];
+    setLikedItems(storedLikedItems);
+  }, []);
+
+  // Handle Profile Image Upload
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -145,15 +154,9 @@ const UserProfile = () => {
                   <h2 className="text-sm font-semibold text-gray-600">Mobile Number</h2>
                   <p className="text-lg mt-1">{userInfo.mobileNo}</p>
                 </div>
-                
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <h2 className="text-sm font-semibold text-gray-600">College</h2>
                   <p className="text-lg mt-1">{userInfo.college}</p>
-                </div>
-                
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h2 className="text-sm font-semibold text-gray-600">PRN</h2>
-                  <p className="text-lg mt-1">{userInfo.prn}</p>
                 </div>
               </div>
 
@@ -162,7 +165,6 @@ const UserProfile = () => {
                   <h2 className="text-sm font-semibold text-gray-600">Address</h2>
                   <p className="text-lg mt-1">{userInfo.address}</p>
                 </div>
-                
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <h2 className="text-sm font-semibold text-gray-600">Member Since</h2>
                   <p className="text-lg mt-1">
@@ -176,10 +178,28 @@ const UserProfile = () => {
               </div>
             </div>
           </div>
+
+          {/* Liked Items Section */}
+          <div className="px-8 py-6">
+            <h2 className="text-xl font-bold">Liked Items</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+              {likedItems.length > 0 ? (
+                likedItems.map(item => (
+                  <div key={item._id} className="border rounded-lg p-4 shadow-md">
+                    <img src={item.images[0]} alt={item.title} className="w-full h-32 object-cover rounded-md" />
+                    <h3 className="text-lg font-semibold mt-2">{item.title}</h3>
+                    <p className="text-sm text-gray-500">₹ {item.price}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500">No liked items yet.</p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default UserProfile; 
+export default UserProfile;

@@ -37,27 +37,20 @@ const ProductCard = ({
   };
 
   const handleLikeClick = async (e) => {
-    e.stopPropagation(); // Prevent card click event from triggering
+    e.stopPropagation();
     
-    // Check if user is logged in
     const token = localStorage.getItem('token');
-    
     if (!token) {
-      // Open login modal if not logged in
       setIsLoginModalOpen(true);
       return;
     }
     
-    // Prevent multiple clicks
     if (isLiking || liked) return;
     
     setIsLiking(true);
+    console.log("e -> ",e);
     
     try {
-      const token = localStorage.getItem('token');
-      console.log(token)
-      console.log(_id)
-      // Make API request to like the post
       const response = await fetch(`https://campusbazzarbackend.onrender.com/api/posts/like/${_id}`, {
         method: 'GET',
         headers: {
@@ -65,10 +58,19 @@ const ProductCard = ({
           'Authorization': `Bearer ${token}`
         }
       });
-      
+  
       if (response.ok) {
         setLiked(true);
         toast.success('Post liked successfully!');
+  
+        // Get existing liked items from localStorage
+        let likedItems = JSON.parse(localStorage.getItem('likedItems')) || [];
+        
+        // Check if the item is already liked (avoid duplicates)
+        if (!likedItems.some(item => item._id === _id)) {
+          likedItems.push({ _id, title, price, images });
+          localStorage.setItem('likedItems', JSON.stringify(likedItems));
+        }
       } else {
         const errorData = await response.json();
         toast.error(errorData.message || 'Failed to like post');
@@ -80,6 +82,7 @@ const ProductCard = ({
       setIsLiking(false);
     }
   };
+  
 
   // const handleLogin = async (email, password) => {
   //   setLoading(true);
