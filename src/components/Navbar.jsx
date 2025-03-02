@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect,useRef } from 'react';
 import { Search, Plus, ChevronDown, Heart, User, Menu, X, LogOut } from 'lucide-react';
 import LoginModal from './auth/LoginModal';
 import SignupModal from './auth/SignupModal';
@@ -15,7 +15,9 @@ const Navbar = () => {
   const [loading, setLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
-  
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(true);
+  const dropdownRef = useRef(null);
+
   const locations = ['PCCOE','DYP','COEP'];
 
   const handleLocationSelect = (loc) => {
@@ -27,6 +29,19 @@ const Navbar = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     setIsLoggedIn(!!token);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsUserDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   // Updated login handler
@@ -270,23 +285,43 @@ const Navbar = () => {
               )}
               
               {isLoggedIn && (
-                <>
-                  <Link 
-                    to="/user-profile" 
-                    className="text-[#002f34] hover:text-[#3a77ff]"
-                  >
-                    <User size={24} />
-                  </Link>
-                  <button 
-                    onClick={handleLogout}
-                    className="text-red-600 hover:text-red-700 font-semibold flex items-center"
-                  >
-                    <LogOut size={20} className="mr-1" />
-                    Logout
-                  </button>
-                </>
-              )}
-              
+  <div className="relative">
+    {/* User Icon with Dropdown Toggle */}
+    <button
+      onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+      className="flex items-center space-x-2 text-[#002f34] hover:text-[#3a77ff]"
+    >
+      <User size={24} />
+      <ChevronDown size={16} />
+    </button>
+
+    {/* Dropdown Menu */}
+    {isUserDropdownOpen && (
+      <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-20">
+        <Link 
+          to="/user-profile" 
+          className="block px-4 py-2 w-full text-left hover:bg-gray-100"
+        >
+          Profile
+        </Link>
+        <Link 
+          to="/my-posts" 
+          className="block px-4 py-2 w-full text-left hover:bg-gray-100"
+        >
+          My Posts
+        </Link>
+        <button 
+          onClick={handleLogout}
+          className="block px-4 py-2 w-full text-left text-red-600 hover:bg-gray-100"
+        >
+          <LogOut size={20} className="inline-block mr-2" />
+          Logout
+        </button>
+      </div>
+    )}
+  </div>
+)}
+
               {/* Modified Sell button */}
               <button 
                 onClick={handleSellClick}
@@ -325,13 +360,33 @@ const Navbar = () => {
 
               {isLoggedIn && (
                 <>
-                  <Link 
-                    to="/user-profile"
-                    className="flex items-center py-2 text-[#002f34] font-medium"
-                  >
-                    <User size={20} className="mr-2" />
-                    Profile
-                  </Link>
+                  <div className="relative">
+  <button
+    onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+    className="flex items-center space-x-2 text-[#002f34] hover:text-[#3a77ff]"
+  >
+    <User size={24} />
+    <ChevronDown size={16} />
+  </button>
+
+  {isUserDropdownOpen && (
+    <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-20">
+      <button
+        onClick={() => navigate('/user-profile')}
+        className="block px-4 py-2 w-full text-left hover:bg-gray-100"
+      >
+        Profile
+      </button>
+      <button
+        onClick={() => navigate('/my-posts')}
+        className="block px-4 py-2 w-full text-left hover:bg-gray-100"
+      >
+        My Posts
+      </button>
+    </div>
+  )}
+</div>
+
                   <button 
                     onClick={handleLogout}
                     className="flex items-center py-2 text-red-600 font-medium w-full"

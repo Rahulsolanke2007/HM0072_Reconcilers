@@ -8,7 +8,8 @@ import Footer from "./components/Footer";
 import CardDetail from "./components/CardDetail";
 import Login from './components/Login';
 import PostAdForm from "./components/PostAddForm";
-import UserProfile from './pages/UserProfile'
+import UserProfile from './pages/UserProfile';
+import UserPosts from "./components/UserPosts";
 
 function App() {
   return (
@@ -32,6 +33,8 @@ function App() {
         <Route path="/detail" element={<CardDetail/>} />
         <Route path="/post-ad" element={<PostAdForm/>} />
         <Route path="/user-profile" element={<UserProfile/>} />
+        <Route path="/my-posts" element={<UserPosts/>} />
+
       </Routes>
       <Footer />
     </div>
