@@ -1,7 +1,9 @@
-import { useState } from 'react';
-import { Search, Plus, ChevronDown, Heart, User, Menu, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Search, Plus, ChevronDown, Heart, User, Menu, X, LogOut } from 'lucide-react';
 import LoginModal from './auth/LoginModal';
 import SignupModal from './auth/SignupModal';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,6 +14,8 @@ const Navbar = () => {
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
   
   const locations = ['PCCOE','DYP','COEP'];
   const categories = [
@@ -26,14 +30,17 @@ const Navbar = () => {
     setIsLocationDropdownOpen(false);
   };
 
-  // Add login handler
+  // Add useEffect to check login status
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token);
+  }, []);
+
+  // Updated login handler
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
-
-    const email = e.target.email.value;
-    const password = e.target.password.value;
 
     try {
       const response = await fetch('https://campusbazzarbackend.onrender.com/api/user/login', {
@@ -41,28 +48,56 @@ const Navbar = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+          email: e.target.email.value,
+          password: e.target.password.value
+        }),
       });
 
       const data = await response.json();
       
       if (response.ok) {
-        // Store token in localStorage
         localStorage.setItem('token', data.token);
+        setIsLoggedIn(true);
         setIsLoginModalOpen(false);
-        // You might want to add user state management here
-        console.log("login done");
+        toast.success('Successfully logged in!', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
+        toast.error(data.message || 'Login failed', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
         setError(data.message || 'Login failed');
       }
     } catch (err) {
+      toast.error('Something went wrong. Please try again.', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       setError('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  // Add signup handler
+  // Updated signup handler
   const handleSignup = async (e) => {
     e.preventDefault();
     setError('');
@@ -91,15 +126,67 @@ const Navbar = () => {
       
       if (response.ok) {
         setIsSignupModalOpen(false);
-        setIsLoginModalOpen(true); // Redirect to login after successful signup
+        setIsLoginModalOpen(true);
+        toast.success('Successfully signed up! Please login.', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
+        toast.error(data.message || 'Signup failed', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
         setError(data.message || 'Signup failed');
       }
     } catch (err) {
+      toast.error('Something went wrong. Please try again.', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       setError('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
+  };
+
+  // Modified sell button handler
+  const handleSellClick = (e) => {
+    e.preventDefault();
+    if (!isLoggedIn) {
+      setIsLoginModalOpen(true);
+    } else {
+      navigate('/post-ad');
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    navigate('/');
+    toast.success('Successfully logged out!', {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   return (
@@ -177,20 +264,42 @@ const Navbar = () => {
               {/* Language selector */}
               <div className="relative">
               </div>
-              <button 
-                onClick={() => setIsLoginModalOpen(true)} 
-                className="text-[#002f34] font-semibold"
-              >
-                Login
-              </button>
               
-              {/* Sell button */}
-              <a 
-                href="/post-ad" 
+              {/* Only show login button if not logged in */}
+              {!isLoggedIn && (
+                <button 
+                  onClick={() => setIsLoginModalOpen(true)} 
+                  className="text-[#002f34] font-semibold"
+                >
+                  Login
+                </button>
+              )}
+              
+              {isLoggedIn && (
+                <>
+                  <Link 
+                    to="/user-profile" 
+                    className="text-[#002f34] hover:text-[#3a77ff]"
+                  >
+                    <User size={24} />
+                  </Link>
+                  <button 
+                    onClick={handleLogout}
+                    className="text-red-600 hover:text-red-700 font-semibold flex items-center"
+                  >
+                    <LogOut size={20} className="mr-1" />
+                    Logout
+                  </button>
+                </>
+              )}
+              
+              {/* Modified Sell button */}
+              <button 
+                onClick={handleSellClick}
                 className="flex items-center bg-[#fff7e6] hover:bg-[#ffce32] text-[#002f34] font-semibold px-4 py-2 rounded-full border-2 border-[#ffce32]"
               >
                 <Plus size={20} className="mr-1" /> SELL
-              </a>
+              </button>
             </div>
           </div>
           
@@ -211,19 +320,40 @@ const Navbar = () => {
           {/* Mobile Menu */}
           {isMenuOpen && (
             <div className="md:hidden mt-3 py-2 space-y-3">
-              <button 
-                onClick={() => setIsLoginModalOpen(true)} 
-                className="block py-2 text-[#002f34] font-medium"
-              >
-                Login
-              </button>
+              {!isLoggedIn && (
+                <button 
+                  onClick={() => setIsLoginModalOpen(true)} 
+                  className="block py-2 text-[#002f34] font-medium"
+                >
+                  Login
+                </button>
+              )}
 
-              <a 
-                href="/post-ad" 
+              {isLoggedIn && (
+                <>
+                  <Link 
+                    to="/user-profile"
+                    className="flex items-center py-2 text-[#002f34] font-medium"
+                  >
+                    <User size={20} className="mr-2" />
+                    Profile
+                  </Link>
+                  <button 
+                    onClick={handleLogout}
+                    className="flex items-center py-2 text-red-600 font-medium w-full"
+                  >
+                    <LogOut size={20} className="mr-2" />
+                    Logout
+                  </button>
+                </>
+              )}
+
+              <button 
+                onClick={handleSellClick}
                 className="inline-flex items-center bg-[#fff7e6] hover:bg-[#ffce32] text-[#002f34] font-medium px-4 py-2 rounded-full border-2 border-[#ffce32]"
               >
                 <Plus size={20} className="mr-1" /> SELL
-              </a>
+              </button>
             </div>
           )}
         </div>
