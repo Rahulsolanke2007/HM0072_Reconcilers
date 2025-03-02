@@ -48,9 +48,11 @@ const Navbar = () => {
       });
 
       const data = await response.json();
-      
-      if (response.ok) {
+      console.log(data.status)
+
+      if (data.status) {
         localStorage.setItem('token', data.token);
+        console.log(localStorage.getItem('token'))
         setIsLoggedIn(true);
         setIsLoginModalOpen(false);
         toast.success('Successfully logged in!', {

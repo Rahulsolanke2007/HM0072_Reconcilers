@@ -30,7 +30,7 @@ function App() {
         <Route path="/" element={<ProductList />} />
         <Route path='/login' element={<Login></Login>}/>
         <Route path="/detail" element={<CardDetail/>} />
-        <Route path="/PostAdForm" element={<PostAdForm/>} />
+        <Route path="/post-ad" element={<PostAdForm/>} />
         <Route path="/user-profile" element={<UserProfile/>} />
       </Routes>
       <Footer />
