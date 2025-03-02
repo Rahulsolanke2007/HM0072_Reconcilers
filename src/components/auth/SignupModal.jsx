@@ -73,6 +73,7 @@ const SignupModal = ({ isOpen, onClose, onLoginClick, error, loading, handleSign
       college,
       prn
     };
+    console.log(userData);
     handleSignup(userData);
     setCurrentStep('COMPLETE');
   };

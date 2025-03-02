@@ -48,11 +48,11 @@ const Navbar = () => {
       });
 
       const data = await response.json();
-      console.log(data.status)
+      //console.log(data.status)
 
       if (data.status) {
         localStorage.setItem('token', data.token);
-        console.log(localStorage.getItem('token'))
+        //console.log(localStorage.getItem('token'))
         setIsLoggedIn(true);
         setIsLoginModalOpen(false);
         toast.success('Successfully logged in!', {
@@ -93,71 +93,45 @@ const Navbar = () => {
   };
 
   // Updated signup handler
-  const handleSignup = async (e) => {
-    e.preventDefault();
+  const handleSignup = async (data) => {
+    //console.log('data',data);
+   // if (e?.preventDefault) e.preventDefault(); // Safely check if e exists
+  
     setError('');
     setLoading(true);
-
-    const formData = {
-      name: e.target.fullName.value,
-      email: e.target.email.value,
-      password: e.target.password.value,
-      mobileNo: e.target.phone.value,
-      address: e.target.address.value,
-      college: e.target.college.value,
-      prn: e.target.prn.value,
-    };
-
+  
     try {
+     // console.log(data);
+
+
       const response = await fetch('https://campusbazzarbackend.onrender.com/api/user/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(data),
       });
+  
+      const result = await response.json();
+  
+     // console.log(result);
 
-      const data = await response.json();
-      
       if (response.ok) {
         setIsSignupModalOpen(false);
         setIsLoginModalOpen(true);
-        toast.success('Successfully signed up! Please login.', {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        toast.success('Successfully signed up! Please login.');
       } else {
-        toast.error(data.message || 'Signup failed', {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
         setError(data.message || 'Signup failed');
+        toast.error(data.message || 'Signup failed');
       }
     } catch (err) {
-      toast.error('Something went wrong. Please try again.', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
       setError('Something went wrong. Please try again.');
+      toast.error('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
   };
+  
 
   // Modified sell button handler
   const handleSellClick = (e) => {
@@ -193,8 +167,8 @@ const Navbar = () => {
             {/* Logo */}
             <div className="flex items-center">
               <a href="/" className="text-[#002f34] text-3xl font-bold">
-                <span className="text-[#3a77ff]">UniTrade</span>
-                <span className="text-[#ffce32]">Zone</span>
+                <span className="text-[#3a77ff]">Campus</span>
+                <span className="text-[#ffce32]">Bazzar</span>
               </a>
             </div>
             
